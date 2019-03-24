@@ -1,0 +1,86 @@
+# git help config
+#
+# Also, check git-scm.com/docs/git-config
+
+[user]
+    name =
+    email =
+
+[alias]
+    # Manipulate local and remote branches
+    show-branches = branch --all
+    switch-to-branch = checkout
+    switch-to-previous-branch = checkout -
+    create-branch = branch
+    create-and-switch-to-branch = checkout -b
+    rename-branch = branch --move
+    dup-branch = branch --copy
+    nuke-branch = branch --delete
+
+    # Stage/Add files to index
+    stage = add --all
+    stage-new-and-modified-only = add --ignore-removal .
+    stage-modified-and-deleted-only = add --update
+    show-staged = diff --cached
+    undo-last-commit = reset --soft HEAD^
+    nuke-last-commit = reset --hard HEAD^
+
+    # Unstage/Remove files from index
+    unstage = reset
+    show-unstaged-changes = diff
+    nuke-staged = checkout .
+
+    # Deal with work in progress
+    stash-modified = stash
+    stash-modified-and-untracked = stash --include-untracked
+    show-stashed = stash list
+    nuke-stashed = stash clear
+    nuke-latest-stashed = stash drop
+    pull-back-latest-stashed = stash pop
+    create-branch-from-stash = stash branch
+
+    # Remove untracked files and directories
+    nuke-untracked = clean -d --force
+
+    # Show commit history
+    show-commits = log --oneline --decorate --graph --all
+    show-commits-by-grepping = log --extended-regexp --regexp-ignore-case --grep
+    show-contributors = shortlog --summary --numbered
+    show-todays-commits = log --since='midnight'
+    show-yesterdays-commits = log --since='yesterday' --until='midnight'
+
+    # Commit changes
+    amend-last-commit-message = commit --amend
+    amend-last-commit-but-keep-its-message = commit --amend --no-edit
+    commit-using-inline-message = commit --message
+    commit-using-editor-to-write-message = commit
+
+    # Go back in time whenever
+    enter-time-machine = reflog
+
+    # Handle annoying typos
+    pul = pull
+    psuh = push
+
+# [commit]
+#     template = ~/.gitmessage
+
+[core]
+    pager = less -F -X
+    editor = vim
+    whitespace = tab-in-indent, trailing-space
+    autocrlf = input
+    excludesfile = ~/.gitignore
+    attributesfile = ~/.gitattributes
+
+[color]
+    ui = auto
+
+[fetch]
+    prune = true
+
+[push]
+    default = upstream
+
+[merge]
+    ff = only

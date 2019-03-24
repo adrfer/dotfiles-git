@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+target_dotfiles="${HOME}/.dotfiles-git"
+source_dotfiles='https://github.com/adrfer/dotfiles-git.git'
+
+target_config="${HOME}/.gitconfig"
+source_config="${target_dotfiles}/gitconfig"
+
+# Bail if git cannot be found
+if ! command -v 'git' >/dev/null; then
+    echo -n 'Ooops, git not found.'
+    exit 1
+fi
+
+# Save credentials, if any
+name="$(git config user.name)"
+email="$(git config user.email)"
+
+# Backup existing files, if any
+echo 'Backing up existing files...'
+
+if [[ -d "${target_dotfiles}" ]]; then
+    echo -n "~ Backup for ${target_dotfiles}..."
+    mv -f "${target_dotfiles}"{,"$(date '+ %F at %H.%M.%S %p')"}
+    echo ' done.'
+fi
+
+if [[ -f "${target_config}" ]]; then
+    echo -n "~ Backup for ${target_config}..."
+    mv -f "${target_config}"{,"$(date '+ %F at %H.%M.%S %p')"}
+    echo ' done.'
+fi
+
+# Download new files
+echo -n 'Downloading some git badassery...'
+
+if git clone "${source_dotfiles}" "${target_dotfiles}" >/dev/null 2>&1; then
+  echo ' done.'
+else
+  echo
+  echo "Ooops, unable to access ${source_dotfiles}, try again."
+  exit 1
+fi
+
+# Setup existing and new files
+ln -sf "${source_config}" "${target_config}"
+
+echo 'Now, setting up your credentials...'
+
+if [[ -n "${name}" ]]; then
+  echo -n "Last configured name is '${name}'. "
+  read -r -p 'Change it (y/n [n])? '
+
+  if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+    read -r -p 'Enter new name: ' name
+    git config --global user.name "${name}"
+  fi
+else
+  read -r -p 'Enter your name: ' name
+  git config --global user.name "${name}"
+fi
+
+if [[ -n "${email}" ]]; then
+  echo -n "Last configured email is '${email}'. "
+  read -r -p 'Change it (y/n [n])? '
+
+  if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+    read -r -p 'Enter new email: ' email
+    git config --global user.email "${email}"
+  fi
+else
+  read -r -p 'Enter your email: ' email
+  git config --global user.email "${email}"
+fi
+
+# Return successfully, just in case
+echo 'All good, enjoy!'
+exit 0
