@@ -35,11 +35,11 @@ fi
 echo -n 'Downloading some git badassery...'
 
 if git clone "${source_dotfiles}" "${target_dotfiles}" >/dev/null 2>&1; then
-  echo ' done.'
+    echo ' done.'
 else
-  echo
-  echo "Ooops, unable to access ${source_dotfiles}, try again."
-  exit 1
+    echo
+    echo "Ooops, unable to access ${source_dotfiles}, try again."
+    exit 1
 fi
 
 # Setup existing and new files
@@ -48,29 +48,33 @@ ln -sf "${source_config}" "${target_config}"
 echo 'Now, setting up your credentials...'
 
 if [[ -n "${name}" ]]; then
-  echo -n "Last configured name is '${name}'. "
-  read -r -p 'Change it (y/n [n])? '
+    echo -n "Name '${name}' is being used. "
+    read -r -p 'Change it (y/n [n])? '
 
-  if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-    read -r -p 'Enter new name: ' name
-    git config --global user.name "${name}"
-  fi
+    if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+        read -r -p 'New name: ' new_name
+        git config --global user.name "${new_name}"
+    else
+        git config --global user.name "${name}"
+    fi
 else
-  read -r -p 'Enter your name: ' name
-  git config --global user.name "${name}"
+    read -r -p 'Your name: ' new_name
+    git config --global user.name "${new_name}"
 fi
 
 if [[ -n "${email}" ]]; then
-  echo -n "Last configured email is '${email}'. "
-  read -r -p 'Change it (y/n [n])? '
+    echo -n "Email '${email}' is being used. "
+    read -r -p 'Change it (y/n [n])? '
 
-  if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-    read -r -p 'Enter new email: ' email
-    git config --global user.email "${email}"
-  fi
+    if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+        read -r -p 'New email: ' new_email
+        git config --global user.email "${new_email}"
+    else
+        git config --global user.email "${email}"
+    fi
 else
-  read -r -p 'Enter your email: ' email
-  git config --global user.email "${email}"
+    read -r -p 'Your email: ' new_email
+    git config --global user.email "${new_email}"
 fi
 
 # Return successfully, just in case
