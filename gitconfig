@@ -57,6 +57,9 @@
 
     # Go back in time whenever
     enter-time-machine = reflog
+    
+    # Update multiple repositories at once
+    pull-all="!f() { find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;}; f"
 
     # Handle annoying typos
     pul = pull
